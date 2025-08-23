@@ -20,4 +20,4 @@ There will be only one aggregation server that handles all clients and content s
 
 ## UML Diagram
 
-!Simple UML diagram(https://github.com/JuniperWorrall/Weather-Client-Server-System---Assignment-2-Distributed-Systems/blob/main/UML.png?raw=true)
+<img width="802" height="181" alt="UML" src="https://github.com/user-attachments/assets/b6a8c24b-f872-4642-b449-914af86aa4f6" />
