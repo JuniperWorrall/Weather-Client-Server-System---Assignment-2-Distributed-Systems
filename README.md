@@ -17,3 +17,7 @@ Sends GET requests to the aggregation server and will, in turn, receive JSON dat
 ## Number of Replicas
 
 There will be only one aggregation server that handles all clients and content servers, acting as the central hub. There can be any number of content servers, as these simulate separate weather stations sending their own data. There will also be any number of clients, as the number of people requesting data could be substantial.
+
+## UML Diagram
+
+!Simple UML diagram(https://github.com/JuniperWorrall/Weather-Client-Server-System---Assignment-2-Distributed-Systems/blob/main/Untitled_Diagram.drawio(2).png?raw=true)
