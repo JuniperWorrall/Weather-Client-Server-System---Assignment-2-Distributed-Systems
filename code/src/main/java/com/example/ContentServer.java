@@ -5,14 +5,16 @@ import java.nio.Buffer;
 
 public class ContentServer {
     private int LamportClock;
-    private String LocalWeatherData;
+    private static String LocalWeatherData;
 
-    public void Run(String[] args){
+    public static void main(String[] args){
+        args = new String[]{"server:19", "Weather.txt"};
         String ServerAndPort = args[0];
         LocalWeatherData =  args[1];
+        TextToJSON();
     }
 
-    public void TextToJSON(){
+    public static void TextToJSON(){
         BufferedReader br = null;
 
         try{
@@ -29,6 +31,7 @@ public class ContentServer {
             String line;
             String JSONLine = "";
             String temp;
+
             while ((line = br.readLine()) != null){
                 int indexOfColon = line.indexOf(":");
 
@@ -39,13 +42,15 @@ public class ContentServer {
                     JSONLine = "\"" + temp + "\" : \"";
                     temp = line.substring(indexOfColon+1);
                     temp = temp.replaceAll("\\s", "");
-                    JSONLine = JSONLine + temp + "\",";
+                    JSONLine = JSONLine + temp + "\",\n";
                 } else{
                     System.err.println("Error colon not found in line");
                 }
             }
             JSONLine = JSONLine.replaceAll(",", "");
             fw.write(JSONLine);
+            fw.flush();
+            fw.close();
         } catch(IOException e){
             System.err.println("Error while reading local weather data");
             e.printStackTrace();
