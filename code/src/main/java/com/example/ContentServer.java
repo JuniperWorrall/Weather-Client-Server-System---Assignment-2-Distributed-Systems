@@ -1,6 +1,6 @@
 package com.example;
 
-import javax.net.ssl.HttpsURLConnection;
+import java.net.HttpURLConnection;
 import java.io.*;
 import java.nio.Buffer;
 import java.net.URL;
@@ -65,7 +65,7 @@ public class ContentServer {
     }
 
     public static void SendPUT() throws IOException{
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("PUT");
         connection.setDoOutput(true);
         connection.setRequestProperty("User-Agent", "ATOMClient/1/0");
@@ -91,19 +91,19 @@ public class ContentServer {
         System.out.println("PUT request sent. Response Code: " + responseCode);
 
         switch (responseCode){
-            case HttpsURLConnection.HTTP_OK:
+            case HttpURLConnection.HTTP_OK:
                 System.out.println("HTTP OK");
                 break;
-            case HttpsURLConnection.HTTP_CREATED:
+            case HttpURLConnection.HTTP_CREATED:
                 System.out.println("HTTP CREATED");
                 break;
-            case HttpsURLConnection.HTTP_SERVER_ERROR:
+            case HttpURLConnection.HTTP_SERVER_ERROR:
                 System.out.println("HTTP INTERNAL SERVER ERROR");
                 break;
-            case HttpsURLConnection.HTTP_NO_CONTENT:
+            case HttpURLConnection.HTTP_NO_CONTENT:
                 System.out.println("HTTP NO_CONTENT");
                 break;
-            case HttpsURLConnection.HTTP_BAD_REQUEST:
+            case HttpURLConnection.HTTP_BAD_REQUEST:
                 System.out.println("HTTP NOT GET/PUT");
                 break;
         }
