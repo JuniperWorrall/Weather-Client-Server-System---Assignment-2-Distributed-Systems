@@ -1,0 +1,8 @@
+{
+    "java.test.config": {
+        "name": "JUnit",
+        "workingDirectory": "${workspaceFolder}"
+    },
+    "java.configuration.updateBuildConfiguration": "automatic"
+}
+

@@ -1,0 +1,7 @@
+com\example\AggregationServer$1.class
+com\example\GETClient.class
+com\example\AggregationServer$WeatherEntry.class
+com\example\AggregationServer$ClientHandler.class
+com\example\AggregationServer.class
+com\example\LamportClock.class
+com\example\ContentServer.class

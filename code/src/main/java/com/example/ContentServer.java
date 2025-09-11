@@ -1,26 +1,29 @@
 package com.example;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.io.*;
-import java.nio.Buffer;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class ContentServer {
-    private int LamportClock;
-    private static String LocalWeatherData;
-    private static URL url;
+    private final LamportClock Clock = new LamportClock();
+    public String LocalWeatherData;
 
     public static void main(String[] args) throws IOException {
-        args = new String[]{"https://www.website.com:19", "Weather.txt"};
-        url = new URL(args[0]);
+        public URL url = new URL(args[0]);
         LocalWeatherData =  args[1];
         TextToJSON();
 
         SendPUT();
     }
 
-    public static void TextToJSON(){
+    public void TextToJSON(){
         BufferedReader br = null;
 
         try{
@@ -44,10 +47,10 @@ public class ContentServer {
                 if(indexOfColon != -1){
                     fw.write(JSONLine);
                     temp = line.substring(0, indexOfColon);
-                    temp = temp.replaceAll("\\s", "");
-                    JSONLine = "    \"" + temp + "\" : \"";
+                    temp = temp.replaceAll("\s", "");
+                    JSONLine = "\t\"" + temp + "\":\"";
                     temp = line.substring(indexOfColon+1);
-                    temp = temp.replaceAll("\\s", "");
+                    temp = temp.replaceAll("\s", "");
                     JSONLine = JSONLine + temp + "\",\n";
                 } else{
                     System.err.println("Error colon not found in line");
@@ -64,13 +67,14 @@ public class ContentServer {
         }
     }
 
-    public static void SendPUT() throws IOException{
+    public void SendPUT() throws IOException{
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("PUT");
         connection.setDoOutput(true);
         connection.setRequestProperty("User-Agent", "ATOMClient/1/0");
         connection.setRequestProperty("Content-Type", "application/json");
-
+        connection.setRequestProperty("Lamport-Clock",  Integer.toString(Clock.Output()));
+        connection.setRequestProperty("Station-ID",  UUID.randomUUID().toString());
 
         StringBuilder jsonContent = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader("Weather.json"))) {
@@ -80,15 +84,23 @@ public class ContentServer {
             }
         }
 
-        try(FileOutputStream fos = new FileOutputStream("WeatherOutput.txt")){
-            byte[] json = jsonContent.toString().getBytes(StandardCharsets.UTF_8);
-            int contentLength = json.length;
-            connection.setRequestProperty("Content-Length", String.valueOf(contentLength));
-            fos.write(json);
+        byte[] json = jsonContent.toString().getBytes(StandardCharsets.UTF_8);
+
+        connection.setFixedLengthStreamingMode(json.length);
+        connection.setRequestProperty("Content-Length", String.valueOf(json.length));
+
+        try(OutputStream os = connection.getOutputStream()){
+            os.write(json);
+            os.flush();
         }
+
+        Clock.Tick();
 
         int responseCode = connection.getResponseCode();
         System.out.println("PUT request sent. Response Code: " + responseCode);
+
+        String ResponseLamport = connection.getHeaderField("Lamport-Clock");
+        if(ResponseLamport != null) Clock.Assert(Integer.parseInt(ResponseLamport));
 
         switch (responseCode){
             case HttpURLConnection.HTTP_OK:
