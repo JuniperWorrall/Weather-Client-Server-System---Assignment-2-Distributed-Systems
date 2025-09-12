@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.example.AggregationServerTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 31.24 s -- in com.example.AggregationServerTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 31.16 s -- in com.example.AggregationServerTest

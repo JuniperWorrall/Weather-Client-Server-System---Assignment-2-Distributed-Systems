@@ -11,9 +11,9 @@ public class GETClient {
     private final LamportClock Clock = new LamportClock();
     public URL url;
 
-    public void Run() throws MalformedURLException {
-        String[] args = new String[]{"http://localhost:4567/", "Weather.txt"};
-        url = new URL(args[0]);
+    public static void main(String[] args) throws MalformedURLException, IOException {
+        args = new String[]{"http://localhost:4567/"};
+        new GETClient().SendGET(args[0]);
     }
 
     public void OutputJSON(BufferedReader br) throws IOException {
@@ -21,20 +21,28 @@ public class GETClient {
         String Input;
 
         while ((Input = br.readLine()) != null) {
-            if(Input.startsWith("\"") && !Input.startsWith("\"stations\"")){
-                String Variable = Input.split(":")[0].trim().replaceAll("\"", "");
-                String Value = Input.split(":")[1].trim().replaceAll("\"", "");
-                if(Variable.equals("id")){
-                    Output = Output.concat("\n---\nStation: " + Value + "\n");
-                } else{
-                    Output = Output.concat("\t" + Variable + ": " + Value + "\n");
+            if(Input.trim().startsWith("{") && !Input.trim().equals("{")){
+                String[] VariablesList = Input.split(",");
+
+                for(String Item : VariablesList ){
+                    String Variable = Item.trim().split(":")[0].replaceAll("\"", "");
+                    String Value = Item.trim().split(":")[1].replaceAll("\"", "");
+                    if(Variable.equals("{id")){
+                        Output = Output.concat("\n---\nStation: " + Value + "\n\n");
+                    }else if(Value.endsWith("}")){
+                        Value = Value.substring(0, Value.length() - 1);
+                        Output = Output.concat(Variable + ": " + Value + "\n\n");
+                    }else{
+                        Output = Output.concat(Variable + ": " + Value + "\n");
+                    }
                 }
             }
         }
         System.out.print(Output);
     }
 
-    public void SendGET() throws IOException {
+    public void SendGET(String urlString) throws IOException {
+        url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("User-Agent", "ATOMClient/1/0");

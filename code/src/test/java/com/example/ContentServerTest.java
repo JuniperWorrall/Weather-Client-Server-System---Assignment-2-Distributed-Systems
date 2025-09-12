@@ -35,8 +35,7 @@ public class ContentServerTest {
 
     @Test
     void testTextToJSON_createsJsonFile() throws Exception {
-        server.LocalWeatherData = testInputFile.getAbsolutePath();
-        server.TextToJSON();
+        server.TextToJSON(testInputFile.getAbsolutePath());
 
         File jsonFile = new File("Weather.json");
         assertTrue(jsonFile.exists(), "Weather.json should exist after conversion");
@@ -69,12 +68,10 @@ public class ContentServerTest {
         mockServer.start();
 
         // Prepare input JSON
-        server.LocalWeatherData = testInputFile.getAbsolutePath();
-        server.TextToJSON();
-        server.url = new URL("http://localhost:" + port + "/");
+        server.TextToJSON(testInputFile.getAbsolutePath());
 
         // Run PUT
-        server.SendPUT();
+        server.SendPUT("http://localhost:" + port + "/");
 
         // Shutdown server
         mockServer.stop(0);
@@ -100,27 +97,22 @@ public class ContentServerTest {
         mockServer.start();
 
         ContentServer cs1 = new ContentServer();
-        cs1.LocalWeatherData = testInputFile.getAbsolutePath();
-        cs1.url = new URL("http://localhost:" + port + "/");
-
         ContentServer cs2 = new ContentServer();
-        cs2.LocalWeatherData = testInputFile.getAbsolutePath();
-        cs2.url = new URL("http://localhost:" + port + "/");
 
-        cs1.TextToJSON();
-        cs2.TextToJSON();
+        cs1.TextToJSON(testInputFile.getAbsolutePath());
+        cs2.TextToJSON(testInputFile.getAbsolutePath());
 
         // Run PUTs concurrently
         Thread t1 = new Thread(() -> {
             try {
-                cs1.SendPUT();
+                cs1.SendPUT("http://localhost:" + port + "/");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
         Thread t2 = new Thread(() -> {
             try {
-                cs2.SendPUT();
+                cs2.SendPUT("http://localhost:" + port + "/");
             } catch (IOException e) {
                 e.printStackTrace();
             }

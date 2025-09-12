@@ -152,17 +152,16 @@ public class AggregationServer {
 
         Clock.Tick();
         
-        String JSONLine = "{\n  \"stations\": [\n";
-        String Temp = "";
+        String JSONLine = "{\n  \"stations\":[\n";
+        String EntryTemp = "";
+        String LineTemp = "";
 
         for(WeatherEntry entry : DataStore.values()){
-            JSONLine += Temp;
-            Temp = "\t" + entry.body + ",\n";
+            JSONLine += LineTemp.replaceAll("\t", "");
+            EntryTemp = entry.body.replaceAll("\t", "");
+            LineTemp = "\t\t\t " + entry.body.replaceAll("\t", "") + ",\n";
         }
-        StringBuilder sb = new StringBuilder(Temp);
-        sb.deleteCharAt(sb.lastIndexOf(","));
-        Temp = sb.toString();
-        JSONLine += Temp;
+        JSONLine += "\t\t\t " + EntryTemp + "\n  ]\n}";
 
         SendResponse(out, 200, JSONLine);
     }
@@ -178,22 +177,22 @@ public class AggregationServer {
     }
 
     private void SaveToFile() throws IOException {
-        Path TempPath = Paths.get("weatherdata.json.tmp");
-        Path RealPath = Paths.get("weatherdata.json");
+        Path TempPath = Paths.get("WeatherData.json.tmp");
+        Path RealPath = Paths.get("WeatherData.json");
 
-        String JSONLine = "{\n  \"stations\": [\n";
-        String Temp = "";
+        String JSONLine = "{\n  \"stations\":[\n";
+        String EntryTemp = "";
+        String LineTemp = "";
             
         for(ConcurrentHashMap.Entry<String, WeatherEntry> entry : DataStore.entrySet()){
-            JSONLine += Temp;
-            Temp = "\t" + entry.getValue().body + ",\n";
+            JSONLine += LineTemp.replaceAll("\t", "");
+            EntryTemp = entry.getValue().body.replaceAll("\t", "");
+            LineTemp = "\t\t\t " + entry.getValue().body.replaceAll("\t", "") + ",\n";
         }
-        StringBuilder sb = new StringBuilder(Temp);
-        sb.deleteCharAt(sb.lastIndexOf(","));
-        Temp = sb.toString();
-        JSONLine += Temp;
+
+        JSONLine += "\t\t\t " + EntryTemp + "\n  ]\n}";
         
-        try (FileOutputStream fos = new FileOutputStream(TempPath.toFile(), true); FileChannel Channel = fos.getChannel(); PrintWriter out = new PrintWriter(fos)) {
+        try (FileOutputStream fos = new FileOutputStream(TempPath.toFile()); FileChannel Channel = fos.getChannel(); PrintWriter out = new PrintWriter(fos)) {
             out.print(JSONLine);
 
             Channel.force(true);

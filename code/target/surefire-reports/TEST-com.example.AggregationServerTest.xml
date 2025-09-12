@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.AggregationServerTest" time="31.237" tests="8" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.AggregationServerTest" time="31.158" tests="8" errors="0" skipped="0" failures="0">
   <properties>
-    <property name="jpda.address" value="63408"/>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
@@ -11,15 +10,13 @@
     <property name="user.variant" value=""/>
     <property name="java.vendor.url" value="https://java.oracle.com/"/>
     <property name="user.timezone" value="Australia/Adelaide"/>
-    <property name="forkMode" value="once"/>
     <property name="os.name" value="Windows 11"/>
     <property name="java.vm.specification.version" value="17"/>
     <property name="user.country" value="AU"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\skyba\AppData\Local\Temp\surefire1752660917891172584\surefirebooter-20250911183447979_3.jar C:\Users\skyba\AppData\Local\Temp\surefire1752660917891172584 2025-09-11T18-34-47_647-jvmRun1 surefire-20250911183447979_1tmp surefire_0-20250911183447979_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\skyba\AppData\Local\Temp\surefire16380541003531437273\surefirebooter-20250911211542479_3.jar C:\Users\skyba\AppData\Local\Temp\surefire16380541003531437273 2025-09-11T21-15-42_152-jvmRun1 surefire-20250911211542479_1tmp surefire_0-20250911211542479_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="test" value="com.example.AggregationServerTest"/>
     <property name="surefire.test.class.path" value="C:\Users\skyba\OneDrive\Documents\Uni Stuff\2025\Distributed Programming\Weather-Client-Server-System---Assignment-2-Distributed-Systems\code\target\test-classes;C:\Users\skyba\OneDrive\Documents\Uni Stuff\2025\Distributed Programming\Weather-Client-Server-System---Assignment-2-Distributed-Systems\code\target\classes;C:\Users\skyba\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.0\junit-jupiter-api-5.11.0.jar;C:\Users\skyba\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\skyba\.m2\repository\org\junit\platform\junit-platform-commons\1.11.0\junit-platform-commons-1.11.0.jar;C:\Users\skyba\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\skyba"/>
@@ -33,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\skyba\AppData\Local\Temp\surefire1752660917891172584\surefirebooter-20250911183447979_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\skyba\AppData\Local\Temp\surefire16380541003531437273\surefirebooter-20250911211542479_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.11+7-LTS-207"/>
@@ -43,7 +40,6 @@
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="file.encoding" value="Cp1252"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
-    <property name="jpda.listen" value="true"/>
     <property name="maven.ext.class.path" value="C:\Users\skyba\.vscode\extensions\oracle.oracle-java-24.1.0\nbcode\java\maven-nblib\netbeans-eventspy.jar"/>
     <property name="localRepository" value="C:\Users\skyba\.m2\repository"/>
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
@@ -60,14 +56,13 @@
     <property name="java.vm.version" value="17.0.11+7-LTS-207"/>
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
-    <property name="maven.surefire.debug" value="-agentlib:jdwp=transport=dt_socket,server=n,address=63408"/>
   </properties>
-  <testcase name="testExpiryRemovesOldData" classname="com.example.AggregationServerTest" time="31.1"/>
-  <testcase name="testHandleGETReturnsJson" classname="com.example.AggregationServerTest" time="0.056"/>
+  <testcase name="testExpiryRemovesOldData" classname="com.example.AggregationServerTest" time="31.063"/>
+  <testcase name="testHandleGETReturnsJson" classname="com.example.AggregationServerTest" time="0.008"/>
   <testcase name="testHandlePUTWithInvalidJsonReturns500" classname="com.example.AggregationServerTest" time="0.001"/>
   <testcase name="testSaveAndLoadFile" classname="com.example.AggregationServerTest" time="0.01"/>
-  <testcase name="testHandlePUTUpdatesExistingEntry" classname="com.example.AggregationServerTest" time="0.011"/>
-  <testcase name="testHandlePUTCreatesNewEntry" classname="com.example.AggregationServerTest" time="0.006"/>
-  <testcase name="testAggregationServerReturnsAllStatusCodes" classname="com.example.AggregationServerTest" time="0.016"/>
-  <testcase name="testSendResponseFormat" classname="com.example.AggregationServerTest" time="0.0"/>
+  <testcase name="testHandlePUTUpdatesExistingEntry" classname="com.example.AggregationServerTest" time="0.021"/>
+  <testcase name="testHandlePUTCreatesNewEntry" classname="com.example.AggregationServerTest" time="0.005"/>
+  <testcase name="testAggregationServerReturnsAllStatusCodes" classname="com.example.AggregationServerTest" time="0.014"/>
+  <testcase name="testSendResponseFormat" classname="com.example.AggregationServerTest" time="0.001"/>
 </testsuite>

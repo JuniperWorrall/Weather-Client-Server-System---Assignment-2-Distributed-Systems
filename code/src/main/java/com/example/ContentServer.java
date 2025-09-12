@@ -9,21 +9,16 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
 public class ContentServer {
     private final LamportClock Clock = new LamportClock();
-    public String LocalWeatherData;
 
     public static void main(String[] args) throws IOException {
-        public URL url = new URL(args[0]);
-        LocalWeatherData =  args[1];
-        TextToJSON();
-
-        SendPUT();
+        new ContentServer().TextToJSON(args[1]);
+        new ContentServer().SendPUT(args[0]);
     }
 
-    public void TextToJSON(){
+    public void TextToJSON(String LocalWeatherData){
         BufferedReader br = null;
 
         try{
@@ -47,11 +42,9 @@ public class ContentServer {
                 if(indexOfColon != -1){
                     fw.write(JSONLine);
                     temp = line.substring(0, indexOfColon);
-                    temp = temp.replaceAll("\s", "");
                     JSONLine = "\t\"" + temp + "\":\"";
                     temp = line.substring(indexOfColon+1);
-                    temp = temp.replaceAll("\s", "");
-                    JSONLine = JSONLine + temp + "\",\n";
+                    JSONLine += temp + "\",\n";
                 } else{
                     System.err.println("Error colon not found in line");
                 }
@@ -67,22 +60,29 @@ public class ContentServer {
         }
     }
 
-    public void SendPUT() throws IOException{
+    public void SendPUT(String urlString) throws IOException{
+        URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("PUT");
         connection.setDoOutput(true);
         connection.setRequestProperty("User-Agent", "ATOMClient/1/0");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Lamport-Clock",  Integer.toString(Clock.Output()));
-        connection.setRequestProperty("Station-ID",  UUID.randomUUID().toString());
+
 
         StringBuilder jsonContent = new StringBuilder();
+        String ID = "";
         try (BufferedReader reader = new BufferedReader(new FileReader("Weather.json"))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                if(line.contains("ID")){
+                    ID = line.split(":")[1].replaceAll("\"", "");
+                }
                 jsonContent.append(line);
             }
         }
+
+        connection.setRequestProperty("Station-ID", ID);
 
         byte[] json = jsonContent.toString().getBytes(StandardCharsets.UTF_8);
 

@@ -70,11 +70,8 @@ class GETClientTest {
     void testSendGET_receivesJsonAndParses() throws Exception {
         GETClient client = new GETClient();
 
-        // Setting the URL
-        client.Run();
-
         // Run the GET call
-        client.SendGET();
+        client.SendGET("http://localhost:4567/");
 
         // Capture printed output
         String printed = outContent.toString();
@@ -94,8 +91,9 @@ class GETClientTest {
     @Test
     void testGETClientHandlesServerDown() throws MalformedURLException {
         GETClient client = new GETClient();
-        client.url = new URL("http://localhost:9999/"); // assuming nothing is running here
 
-        assertThrows(ConnectException.class, client::SendGET);
+        assertThrows(ConnectException.class, () -> {
+            client.SendGET("http://localhost:9999/");
+        });
     }
 }
