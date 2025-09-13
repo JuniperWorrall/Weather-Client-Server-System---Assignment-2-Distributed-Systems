@@ -124,12 +124,14 @@ public class AggregationServer {
         }
 
         try{
+            boolean isNew = !DataStore.containsKey(ID);
+
             WeatherEntry entry = new WeatherEntry();
             entry.body = body;
             entry.lastUpdated = System.currentTimeMillis();
             entry.LamportNumber = Clock.Output();
 
-            WeatherEntry previous = DataStore.compute(ID,(key, existing) -> {
+            DataStore.compute(ID,(key, existing) -> {
                 if(existing == null || entry.LamportNumber > existing.LamportNumber){
                     return entry;
                 }
@@ -139,8 +141,6 @@ public class AggregationServer {
             Clock.Tick();
             
             SaveToFile();
-
-            boolean isNew = (previous == null); //Checks if Station ID is already in map
 
             SendResponse(out, isNew ? 201 : 200, "OK"); //If new send 201 otherwise 200
         } catch (Exception e) {

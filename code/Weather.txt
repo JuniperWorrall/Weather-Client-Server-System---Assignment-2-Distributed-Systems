@@ -1,0 +1,2 @@
+Temperature: 25
+Humidity: 80

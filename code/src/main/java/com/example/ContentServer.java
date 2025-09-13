@@ -41,9 +41,9 @@ public class ContentServer {
 
                 if(indexOfColon != -1){ //Split data into Variable and value and add quotation marks around them
                     fw.write(JSONLine);
-                    temp = line.split(":")[0];
+                    temp = line.split(":")[0].trim();
                     JSONLine = "\t\"" + temp + "\":\"";
-                    temp = line.split(":")[1];
+                    temp = line.split(":")[1].trim();
                     JSONLine += temp + "\",\n";
                 } else{
                     System.err.println("Error colon not found in line, Data Error");

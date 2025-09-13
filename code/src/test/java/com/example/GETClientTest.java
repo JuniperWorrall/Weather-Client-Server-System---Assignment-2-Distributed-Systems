@@ -8,12 +8,9 @@ import java.lang.reflect.Field;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,10 +32,10 @@ class GETClientTest {
             @Override
             public void handle(HttpExchange exchange) throws IOException {
                 // Send back JSON with headers
-                String responseJson = "{\n" +
-                        "\"id\": \"station-123\",\n" +
-                        "\"temp\": \"25\"\n" +
-                        "\"humidity\": \"80\"\n" +
+                String responseJson = "{" +
+                        "\"id\":\"station-123\"," +
+                        "\"temp\":\"25\"," +
+                        "\"humidity\":\"80\"" +
                         "}";
                 exchange.getResponseHeaders().add("LamportClock", "5");
                 exchange.sendResponseHeaders(200, responseJson.getBytes().length);
@@ -77,7 +74,7 @@ class GETClientTest {
         String printed = outContent.toString();
 
         // Check if the formatted output contains the expected values
-        assertTrue(printed.contains("Station: station-123"), "Output should include station ID");
+        assertTrue(printed.contains("Station: station-123"), "Output should include Station ID");
         assertTrue(printed.contains("temp: 25"), "Output should include temperature");
         assertTrue(printed.contains("humidity: 80"), "Output should include humidity");
 
