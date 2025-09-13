@@ -40,7 +40,7 @@ public class AggregationServerTest {
         server.HandlePUT(in, out);
 
         String response = responseWriter.toString();
-        assertTrue(response.contains("HTTP/1.1 201"), response); // created
+        assertTrue(response.contains("HTTP/1.1 201")); // created
     }
 
     @Test
