@@ -14,8 +14,8 @@ public class ContentServer {
     private final LamportClock Clock = new LamportClock();
 
     public static void main(String[] args) throws IOException {
-        new ContentServer().TextToJSON(args[1]);
-        new ContentServer().SendPUT(args[0]);
+        new ContentServer().TextToJSON(args[1]); //Turn given file into JSON
+        new ContentServer().SendPUT(args[0]); //Send that file to given url
     }
 
     public void TextToJSON(String LocalWeatherData){
@@ -27,31 +27,32 @@ public class ContentServer {
             if(myFile.createNewFile()){
                 System.out.println("File created");
             } else{
-                System.out.println( "Error file already exists!" );
+                System.out.println("File already exists!");
             }
 
             FileWriter fw = new FileWriter("Weather.json");
-            br = new BufferedReader(new FileReader(LocalWeatherData));
+            br = new BufferedReader(new FileReader(LocalWeatherData)); 
             String line;
             String JSONLine = "{\n";
             String temp;
 
-            while ((line = br.readLine()) != null){
+            while ((line = br.readLine()) != null){ //Read in data from file one line at a time
                 int indexOfColon = line.indexOf(":");
 
-                if(indexOfColon != -1){
+                if(indexOfColon != -1){ //Split data into Variable and value and add quotation marks around them
                     fw.write(JSONLine);
-                    temp = line.substring(0, indexOfColon);
+                    temp = line.split(":")[0];
                     JSONLine = "\t\"" + temp + "\":\"";
-                    temp = line.substring(indexOfColon+1);
+                    temp = line.split(":")[1];
                     JSONLine += temp + "\",\n";
                 } else{
-                    System.err.println("Error colon not found in line");
+                    System.err.println("Error colon not found in line, Data Error");
+                    return;
                 }
             }
             JSONLine = JSONLine.replaceAll(",", "");
             JSONLine = JSONLine + "}";
-            fw.write(JSONLine);
+            fw.write(JSONLine); //Write the JSON to the file Weather.json
             fw.flush();
             fw.close();
         } catch(IOException e){
@@ -62,6 +63,7 @@ public class ContentServer {
 
     public void SendPUT(String urlString) throws IOException{
         URL url = new URL(urlString);
+        //Connect to the aggregation server and prepare a PUT request
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("PUT");
         connection.setDoOutput(true);
@@ -69,14 +71,14 @@ public class ContentServer {
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Lamport-Clock",  Integer.toString(Clock.Output()));
 
-
         StringBuilder jsonContent = new StringBuilder();
         String ID = "";
+        //Read from the JSON file
         try (BufferedReader reader = new BufferedReader(new FileReader("Weather.json"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if(line.contains("ID")){
-                    ID = line.split(":")[1].replaceAll("\"", "");
+                    ID = line.split(":")[1].replaceAll("\"", ""); //Get the ID
                 }
                 jsonContent.append(line);
             }
@@ -90,19 +92,19 @@ public class ContentServer {
         connection.setRequestProperty("Content-Length", String.valueOf(json.length));
 
         try(OutputStream os = connection.getOutputStream()){
-            os.write(json);
+            os.write(json); //Send request
             os.flush();
         }
 
         Clock.Tick();
 
-        int responseCode = connection.getResponseCode();
+        int responseCode = connection.getResponseCode(); //Get response code
         System.out.println("PUT request sent. Response Code: " + responseCode);
 
-        String ResponseLamport = connection.getHeaderField("Lamport-Clock");
+        String ResponseLamport = connection.getHeaderField("Lamport-Clock"); //Get Lamport and Assert
         if(ResponseLamport != null) Clock.Assert(Integer.parseInt(ResponseLamport));
 
-        switch (responseCode){
+        switch (responseCode){ //Print correct response code
             case HttpURLConnection.HTTP_OK:
                 System.out.println("HTTP OK");
                 break;

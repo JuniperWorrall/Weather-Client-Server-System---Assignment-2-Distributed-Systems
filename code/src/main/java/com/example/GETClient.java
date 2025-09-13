@@ -12,24 +12,23 @@ public class GETClient {
     public URL url;
 
     public static void main(String[] args) throws MalformedURLException, IOException {
-        args = new String[]{"http://localhost:4567/"};
-        new GETClient().SendGET(args[0]);
+        new GETClient().SendGET(args[0]); //Sends get to URL given
     }
 
     public void OutputJSON(BufferedReader br) throws IOException {
         String Output = "";
         String Input;
 
-        while ((Input = br.readLine()) != null) {
-            if(Input.trim().startsWith("{") && !Input.trim().equals("{")){
-                String[] VariablesList = Input.split(",");
+        while ((Input = br.readLine()) != null) { //Reads all off what AggregationServer sends
+            if(Input.trim().startsWith("{") && !Input.trim().equals("{")){ //Checks if starts with curly bracket
+                String[] VariablesList = Input.split(","); //Splits all variables into array
 
                 for(String Item : VariablesList ){
                     String Variable = Item.trim().split(":")[0].replaceAll("\"", "");
                     String Value = Item.trim().split(":")[1].replaceAll("\"", "");
-                    if(Variable.equals("{id")){
+                    if(Variable.equals("{id")){ //Gets ID and separates it from other data
                         Output = Output.concat("\n---\nStation: " + Value + "\n\n");
-                    }else if(Value.endsWith("}")){
+                    }else if(Value.endsWith("}")){ //If its the last Variable get rid of } first
                         Value = Value.substring(0, Value.length() - 1);
                         Output = Output.concat(Variable + ": " + Value + "\n\n");
                     }else{
@@ -38,11 +37,12 @@ public class GETClient {
                 }
             }
         }
-        System.out.print(Output);
+        System.out.print(Output); //Prints parsed JSON
     }
 
     public void SendGET(String urlString) throws IOException {
-        url = new URL(urlString);
+        url = new URL(urlString); 
+        //Connects to AggregationServer
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("User-Agent", "ATOMClient/1/0");
@@ -50,11 +50,11 @@ public class GETClient {
         
         Clock.Tick();
 
-        int responseCode = connection.getResponseCode();
+        int responseCode = connection.getResponseCode(); //Sends and gets response code
         System.out.println("GET request sent. Response Code: " + responseCode);
 
         String ResponseLamport = connection.getHeaderField("Lamport-Clock");
-        if(ResponseLamport != null) Clock.Assert(Integer.parseInt(ResponseLamport));
+        if(ResponseLamport != null) Clock.Assert(Integer.parseInt(ResponseLamport)); //Asserts Lamport
 
         switch (responseCode){
             case HttpURLConnection.HTTP_OK:
@@ -74,9 +74,9 @@ public class GETClient {
                 return;
         }
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream())); //Gets input from Aggregation Server
 
-        OutputJSON(br);
+        OutputJSON(br); //Sends input to OutputJSON so it becomes readable
         br.close();
     }
 }
