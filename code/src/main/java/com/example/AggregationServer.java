@@ -128,24 +128,23 @@ public class AggregationServer {
             entry.body = body;
             entry.lastUpdated = System.currentTimeMillis();
             entry.LamportNumber = Clock.Output();
-            boolean isNew = !DataStore.containsKey(ID); //Checks if Station ID is already in map
 
-            if(!isNew){
-                WeatherEntry Existing = DataStore.get(ID);
-                if(Existing == null || entry.LamportNumber > Existing.LamportNumber){
-                    DataStore.put(ID, entry); //Updates for existing entries withb higher lamport numbers
+            WeatherEntry previous = DataStore.compute(ID,(key, existing) -> {
+                if(existing == null || entry.LamportNumber > existing.LamportNumber){
+                    return entry;
                 }
-            } else{
-                DataStore.put(ID, entry); //Inserts new entries
-            }
+                return existing;
+            });
 
             Clock.Tick();
             
             SaveToFile();
 
+            boolean isNew = (previous == null); //Checks if Station ID is already in map
+
             SendResponse(out, isNew ? 201 : 200, "OK"); //If new send 201 otherwise 200
         } catch (Exception e) {
-            
+            e.printStackTrace();
         }
     }
 
@@ -185,7 +184,7 @@ public class AggregationServer {
         out.println(message); //Sends message (JSON)
     }
 
-    private void SaveToFile() throws IOException {
+    private synchronized void SaveToFile() throws IOException {
         Path TempPath = Paths.get("WeatherData.json.tmp");
         Path RealPath = Paths.get("WeatherData.json");
 
@@ -214,7 +213,7 @@ public class AggregationServer {
         Files.move(TempPath, RealPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING); //Atomically moves to correct file
     }
 
-    private void LoadFromFile() throws IOException {
+    private synchronized void LoadFromFile() throws IOException {
         Path RealPath = Paths.get("WeatherData.json");
 
         if (!Files.exists(RealPath)) return; //Checks if file exists
