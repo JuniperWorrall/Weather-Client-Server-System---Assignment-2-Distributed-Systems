@@ -32,3 +32,9 @@ All of this should happen in a terminal while in the file path /code/src/main/ja
 4. Then, run the Content Server, enter "java com.example.ContentServer http://localhost:(*Choosen_Port_Number*) (*Name of file you want to send, including file type*)". This data will last 30 seconds.
 5. Compile the GETClient, enter "javac com/example/GETClient.java com/example/LamportClock.java".
 6. Then, run the GETClient, enter "java com.example.GETClient http://localhost:(*Choosen_Port_Number*)".
+
+## Testing
+
+Maven 3.9.11 is a dependency here!
+
+Running mvn test in the same path as pom.xml will work, that is the /code/ folder, so entering cd code, then mvn test, will work.
